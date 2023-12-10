@@ -30,6 +30,17 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+var corePolicy = "_CustomCorePolicy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corePolicy,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin();
+                      });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +55,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 //app.UseAutofac();
+app.UseCors(corePolicy);
 
 app.UseAuthorization();
 
