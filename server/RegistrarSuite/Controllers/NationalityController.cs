@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RegistrarSuite.DTO.Metadata;
-using RegistrarSuite.DTO.Students;
 using RegistrarSuite.Services.Metadata;
-using RegistrarSuite.Services.Students;
 
 namespace RegistrarSuite.Controllers
 {
-    [Route("api/FamilyMembers")]
+    [Route("api/Nationality")]
     public class NationalityController : BaseController
     {
         private readonly ICountryService _countryService;
@@ -18,10 +16,10 @@ namespace RegistrarSuite.Controllers
 
         // Gets all nationalities in the system
         // [GET] /api/Nationalities
-        [HttpGet]
-        public async Task<List<CountryDrpDto>> GetNationalities()
+        [HttpGet("Nationalities")]
+        public async Task<List<CountryDto>> GetNationalities()
         {
-            List<CountryDrpDto> result = await _countryService.GetNationalities();
+            List<CountryDto> result = await _countryService.GetNationalities();
             return result;
         }
     }

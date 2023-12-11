@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RegistrarSuite.Data.Models.MetadataSchema;
 using RegistrarSuite.Repositories.Generics;
 
 namespace RegistrarSuite.Repositories.Metadata
 {
-    public interface ICountryRepository : IGRepository<Data.Models.MetadataSchema.Country>
+    public interface ICountryRepository : IGRepository<Country>
     {
     }
 }

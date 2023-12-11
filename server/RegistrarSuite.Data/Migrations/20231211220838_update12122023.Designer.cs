@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RegistrarSuite.Data.DataContext;
 
@@ -10,9 +11,11 @@ using RegistrarSuite.Data.DataContext;
 namespace RegistrarSuite.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231211220838_update12122023")]
+    partial class update12122023
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
@@ -23,7 +26,7 @@ namespace RegistrarSuite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Code")
+                    b.Property<string>("CallingCode")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("CreatedBy")
@@ -32,13 +35,37 @@ namespace RegistrarSuite.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CurrencyCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Flag")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Latitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Longitude")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NativeName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Population")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortName")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UpdatedBy")

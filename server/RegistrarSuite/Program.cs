@@ -7,9 +7,10 @@ using Microsoft.Extensions.Hosting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System.Reflection.Metadata;
 using RegistrarSuite.Services;
 using AutoMapper;
+using RegistrarSuite.Data.Seed;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,14 +31,17 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var corePolicy = "_CustomCorePolicy";
+builder.Services.AddScoped<DataSeedInitializations>();
 
+var corePolicy = "_CustomCorePolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: corePolicy,
                       policy =>
                       {
                           policy.AllowAnyOrigin();
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
                       });
 });
 
@@ -51,10 +55,11 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Registrar Suite API V1");
     });
+    app.SeedData();
 }
 
 app.UseHttpsRedirection();
-//app.UseAutofac();
+
 app.UseCors(corePolicy);
 
 app.UseAuthorization();

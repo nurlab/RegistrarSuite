@@ -9,11 +9,11 @@ namespace RegistrarSuite.Services.Students
         /// Retrieves a list of all students.
         /// </summary>
         /// <returns>
-        /// A <see cref="Task{List{StudentBasicDto}}"/> representing the asynchronous operation.
-        /// The task result is a list of <see cref="StudentBasicDto"/> containing basic details of all students.
+        /// A <see cref="Task{List{StudentDto}}"/> representing the asynchronous operation.
+        /// The task result is a list of <see cref="StudentDto"/> containing basic details of all students.
         /// If there are no students, the list will be empty.
         /// </returns>
-        Task<List<StudentBasicDto>> GetAllStudents();
+        Task<List<StudentDto>> GetAllStudents();
 
         /// <summary>
         /// Adds a new Student with Basic Details Only.

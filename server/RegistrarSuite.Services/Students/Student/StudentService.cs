@@ -33,7 +33,7 @@ namespace RegistrarSuite.Services.Students
             _mapper = mapper;
 
         }
-        public async Task<List<StudentBasicDto>> GetAllStudents()
+        public async Task<List<StudentDto>> GetAllStudents()
         {
             try
             {
@@ -41,7 +41,7 @@ namespace RegistrarSuite.Services.Students
 
                 if (students != null)
                 {
-                    List<StudentBasicDto> studentDtos = _mapper.Map<List<StudentBasicDto>>(students);
+                    List<StudentDto> studentDtos = _mapper.Map<List<StudentDto>>(students);
 
                     return studentDtos;                
                 }
@@ -102,6 +102,7 @@ namespace RegistrarSuite.Services.Students
                 var studentExist = await _studentRepository.GetFirstAsync(x => x.Id == id);
                 if (studentExist != null)
                 {
+                    newStudent.Id = id;  // will be replaced by Logged in User Id when Identity feature is built
                     newStudent.UpdatedBy = 1;  // will be replaced by Logged in User Id when Identity feature is built
                     newStudent.UpdatedOn = DateTime.Now;
                     newStudent.CreatedBy = studentExist.CreatedBy;

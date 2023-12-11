@@ -8,6 +8,6 @@ namespace RegistrarSuite.Services.Metadata
 {
     public interface ICountryService
     {
-        Task<List<CountryDrpDto>> GetNationalities();
+        Task<List<CountryDto>> GetNationalities();
     }
 }

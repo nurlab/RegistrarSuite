@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace RegistrarSuite.DTO.Students
 {
+    public class StudentDto
+    {
+        public int Id { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public DateTime DateOfBirth { get; set; }
+    }
     public class StudentBasicDto
     {
         public required string FirstName { get; set; }

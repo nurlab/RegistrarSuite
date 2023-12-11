@@ -18,9 +18,9 @@ namespace RegistrarSuite.Controllers
         // Get all Students
         // GET /api/Students
         [HttpGet]
-        public async Task<List<StudentBasicDto>> GetAllStudentsAsync()
+        public async Task<List<StudentDto>> GetAllStudentsAsync()
         {
-            List<StudentBasicDto> result = await _studentService.GetAllStudents();
+            List<StudentDto> result = await _studentService.GetAllStudents();
             return result;
         }
 

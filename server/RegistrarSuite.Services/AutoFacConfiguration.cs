@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NLog;
 using RegistrarSuite.Repositories.Metadata;
 using RegistrarSuite.Repositories.UOW;
 using RegistrarSuite.Services.Metadata;
@@ -11,7 +12,7 @@ namespace RegistrarSuite.Services
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            // Register unit of work
+
             builder.RegisterGeneric(typeof(UnitOfWork<>)).As(typeof(IUnitOfWork<>)).InstancePerDependency();
 
             builder.RegisterType<StudentService>().As<IStudentService>().InstancePerDependency();
