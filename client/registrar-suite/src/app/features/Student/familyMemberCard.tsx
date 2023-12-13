@@ -11,12 +11,13 @@ import {
 } from '../Home/rootSlice';
 import { FamilyMemberBasicDto } from 'src/@core/dto/FamilyMemberBasicDto';
 import { RelationshipType } from 'src/@core/enum/RelationshipType';
-import { UtilityService } from 'src/app/services/nationalityService copy';
 import { RootState } from 'src/app/store';
-import { FamilyMemberService } from 'src/app/services/familyMemberController';
+import { UtilityService } from 'src/app/services/utilityService';
+import { FamilyMemberService } from 'src/app/services/FamilyMemberService';
 
 interface FamilyMemberCardProps {
   familyMember: FamilyMemberBasicResponseDto;
+  nationalityCode: string;
   studentId: number;
   reLoad: () => void;
   mode: string;
@@ -25,6 +26,7 @@ interface FamilyMemberCardProps {
 }
 export const FamilyMemberCard = ({
   familyMember,
+  nationalityCode,
   studentId,
   reLoad,
   mode = '',
@@ -46,7 +48,7 @@ export const FamilyMemberCard = ({
       lastName: familyMember.lastName || '',
       dateOfBirth: familyMember.dateOfBirth || '',
       relationship: familyMember.relationship || 0,
-      nationality: '',
+      nationalityCode: nationalityCode,
     };
   };
   const [formData, setFormData] = useState(initializeFormData);
@@ -81,7 +83,9 @@ export const FamilyMemberCard = ({
     setIsEditing(false);
     reLoad();
   };
-  const handleSaveChanges = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateFamilyMember = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -96,19 +100,21 @@ export const FamilyMemberCard = ({
         data.dateOfBirth = formData.dateOfBirth;
         data.relationship = formData.relationship;
         let result: FamilyMemberBasicResponseDto | null;
-        result = await updateFamilyMember(studentId, data);
+        result = await updateFamilyMember(familyMember.id, data);
         if (result == null)
           dispatch(
             rootSlice.actions.updateFamilyMemberFailure(
               'Family Member Not Updated'
             )
           );
-        dispatch(rootSlice.actions.updateFamilyMemberSuccess(result));
+
         const familyMemberService = new FamilyMemberService();
         await familyMemberService.updateNationalityOfFamilyMember(
-          data?.id,
-          formData.nationality
+          familyMember.id,
+          formData.nationalityCode
         );
+
+        dispatch(rootSlice.actions.updateFamilyMemberSuccess(result));
       } catch (error) {
         dispatch(rootSlice.actions.updateFamilyMemberFailure(error));
       }
@@ -142,14 +148,15 @@ export const FamilyMemberCard = ({
               'Family Member Not Saved'
             )
           );
-        dispatch(rootSlice.actions.addNewFamilyMemberSuccess(result));
+
         if (result?.id !== undefined && result?.id != null) {
           const familyMemberService = new FamilyMemberService();
           await familyMemberService.updateNationalityOfFamilyMember(
             result?.id,
-            formData.nationality
+            formData.nationalityCode
           );
         }
+        dispatch(rootSlice.actions.addNewFamilyMemberSuccess(result));
       } catch (error) {
         dispatch(rootSlice.actions.addNewFamilyMemberFailure(error));
       }
@@ -225,11 +232,11 @@ export const FamilyMemberCard = ({
             <Form.Group controlId="formNationality">
               <Form.Label>Nationality</Form.Label>
               <Form.Select
-                value={formData.nationality}
+                value={formData.nationalityCode}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    nationality: e.target.value,
+                    nationalityCode: e.target.value,
                   })
                 }
               >
@@ -255,7 +262,7 @@ export const FamilyMemberCard = ({
         )}
         {mode === 'edit' ? (
           isEditing ? (
-            <Form onSubmit={handleSaveChanges}>
+            <Form onSubmit={handleUpdateFamilyMember}>
               <Form.Group controlId="formFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
@@ -313,11 +320,11 @@ export const FamilyMemberCard = ({
               <Form.Group controlId="formNationality">
                 <Form.Label>Nationality</Form.Label>
                 <Form.Select
-                  value={formData.nationality}
+                  value={formData.nationalityCode}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      nationality: e.target.value,
+                      nationalityCode: e.target.value,
                     })
                   }
                 >

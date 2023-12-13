@@ -4,7 +4,7 @@ import { FamilyMemberBasicDto } from "src/@core/dto/FamilyMemberBasicDto";
 import { FamilyMemberBasicResponseDto } from "src/@core/dto/FamilyMemberBasicResponseDto";
 import { StudentBasicDto } from "src/@core/dto/StudentBasicDto";
 import { StudentDto } from "src/@core/dto/StudentDto";
-import { FamilyMemberService } from "src/app/services/familyMemberController";
+import { FamilyMemberService } from "src/app/services/FamilyMemberService";
 import { NationalityService } from "src/app/services/nationalityService";
 import { StudentService } from "src/app/services/studentService";
 

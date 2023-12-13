@@ -14,7 +14,9 @@ import {
 } from '../Home/rootSlice';
 import { FamilyMemberCard } from './familyMemberCard';
 import { CountryDto } from 'src/@core/dto/CountryDto';
-import { UtilityService } from 'src/app/services/nationalityService copy';
+import { UtilityService } from 'src/app/services/utilityService';
+import { FamilyMemberService } from 'src/app/services/FamilyMemberService';
+import { FamilyMemberDto } from 'src/@core/dto/FamilyMemberDto';
 
 interface EditStudentProps {
   showModal: boolean;
@@ -42,6 +44,24 @@ const EditStudent: React.FC<EditStudentProps> = ({
   });
 
   const [showAddForm, setShowAddForm] = useState(false);
+
+  const getNationalityOfFamilyMember = async (
+    familyMemberId: number
+  ): Promise<string> => {
+    if (familyMemberId !== 0) {
+      let result: FamilyMemberDto | null = null;
+      const familyMemberService = new FamilyMemberService();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      result = await familyMemberService.getNationalityOfFamilyMember(
+        familyMemberId,
+        familyMemberId
+      );
+      if (result != null && result?.nationality != undefined)
+        return result?.nationality;
+      else return '';
+    }
+    return '';
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const reLoadFamilyMembers = async () => {
@@ -219,6 +239,7 @@ const EditStudent: React.FC<EditStudentProps> = ({
                       dateOfBirth: '',
                       relationship: 0,
                     }}
+                    nationalityCode=""
                     studentId={student?.id}
                     reLoad={() => reLoadFamilyMembers()}
                     mode="add"
@@ -231,6 +252,9 @@ const EditStudent: React.FC<EditStudentProps> = ({
                 <Col key={familyMember.id} className="py-3">
                   <FamilyMemberCard
                     familyMember={familyMember}
+                    nationalityCode={getNationalityOfFamilyMember(
+                      familyMember.id
+                    )}
                     studentId={student?.id}
                     reLoad={() => reLoadFamilyMembers()}
                     mode="edit"
