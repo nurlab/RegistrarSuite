@@ -183,7 +183,6 @@ namespace RegistrarSuite.Services.Students
 
                     var updatedStudent = _studentRepository.Update(studentExist);
 
-                    StudentNationalityDto updatesStudentDto = _mapper.Map<StudentNationalityDto>(updatedStudent); ;
 
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
@@ -191,7 +190,7 @@ namespace RegistrarSuite.Services.Students
                         _logger.Error("Failed to update the Nationality");
                         return null; ;
                     }
-                    return updatesStudentDto;
+                    return studentDto;
                 }
                 else
                 {
@@ -240,7 +239,7 @@ namespace RegistrarSuite.Services.Students
             }
         }
 
-        public async Task<FamilyMemberBasicDto>? AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto)
+        public async Task<FamilyMemberBasicResponseDto>? AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto)
         {
             try
             {
@@ -263,7 +262,7 @@ namespace RegistrarSuite.Services.Students
                     return null;
                 }
 
-                var studentBasicDto = _mapper.Map<FamilyMemberBasicDto>(newFamilyMember);
+                var studentBasicDto = _mapper.Map<FamilyMemberBasicResponseDto>(newFamilyMember);
 
                 return studentBasicDto;
 

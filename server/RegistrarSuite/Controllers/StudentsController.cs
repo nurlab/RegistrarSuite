@@ -72,9 +72,9 @@ namespace RegistrarSuite.Controllers
         // Creates a new Family Member for a particular Student (without the nationality)
         // POST /api/Students/{id}/FamilyMembers/
         [HttpPost("{id}/FamilyMembers")]
-        public async Task<FamilyMemberBasicDto>? AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto)
+        public async Task<FamilyMemberBasicResponseDto>? AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto)
         {
-            FamilyMemberBasicDto? result = await _studentService.AddFamilyMember(id, requestDto);
+            FamilyMemberBasicResponseDto? result = await _studentService.AddFamilyMember(id, requestDto);
             return result;
         }
 

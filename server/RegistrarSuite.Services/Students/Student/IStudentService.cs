@@ -76,7 +76,7 @@ namespace RegistrarSuite.Services.Students
         /// <param name="id">The identifier of the student for whom the family member is being added.</param>
         /// <param name="requestDto">The data transfer object (DTO) containing information for the new family member.</param>
         /// <returns>A <see cref="Task{FamilyMemberBasicDto}"/> representing the asynchronous operation. The task result is the added <see cref="FamilyMemberBasicDto"/>.</returns>
-        Task<FamilyMemberBasicDto> AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto);
+        Task<FamilyMemberBasicResponseDto> AddFamilyMember(int id, [FromBody] FamilyMemberBasicDto requestDto);
 
     }
 }

@@ -25,6 +25,6 @@ namespace RegistrarSuite.DTO.Students
         public int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public required int? NationalityCode { get; set; }
+        public required string? NationalityCode { get; set; }
     }
 }
