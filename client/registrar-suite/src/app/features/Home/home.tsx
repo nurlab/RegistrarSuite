@@ -125,6 +125,7 @@ export function Home() {
         <Button variant="primary" onClick={() => handleAddClick()}>
           Add Student
         </Button>
+        <hr className="my-3" />
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -162,6 +163,7 @@ export function Home() {
           </tbody>
         </Table>
         {/* Pagination */}
+        <hr className="my-3" />
         <Pagination>
           {Array.from(
             { length: Math.ceil(filteredStudentList.length / itemsPerPage) },
