@@ -148,7 +148,7 @@ export const FamilyMemberCard = ({
       }
       setIsEditing(false);
       reLoad();
-      initializeFormData();
+      //      initializeFormData();
     }
   };
 
@@ -190,7 +190,7 @@ export const FamilyMemberCard = ({
       }
       toggleAddForm();
       reLoad();
-      initializeFormData();
+      //initializeFormData();
     }
   };
   const handleCancelAdd = () => {

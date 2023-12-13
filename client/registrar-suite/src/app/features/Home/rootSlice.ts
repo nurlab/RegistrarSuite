@@ -55,7 +55,7 @@ export const updateStduentNationality = async (id: number, code:string) => {
 };
  // updateStduentNationality
   const initialState = {
-    studentList: [] as StudentDto[],
+    studentList: [] as StudentDto[] | null,
     familyMemberList: [] as FamilyMemberBasicResponseDto[] | null,
     familyMemberBasicResponseDto: {},
     familyMemberBasicDto : {},

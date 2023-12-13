@@ -18,7 +18,7 @@ export function Home() {
   const [selectedStudent, setSelectedStudent] = useState<StudentDto | null>(
     null
   );
-  const itemsPerPage = 5; // Adjust as needed
+  const itemsPerPage = 7; // Adjust as needed
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [validated, setValidated] = useState(false);
@@ -96,13 +96,16 @@ export function Home() {
   };
 
   // Filter the student list based on the search query
-  const filteredStudentList = _root.studentList
-    ? _root.studentList.filter(
-        (student) =>
-          student.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          student.lastName.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const filteredStudentList =
+    _root.studentList && _root.studentList.length > 0
+      ? _root.studentList.filter(
+          (student) =>
+            student.firstName
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            student.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : [];
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -132,24 +135,30 @@ export function Home() {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((student, index) => (
-              <tr
-                key={index}
-                onClick={
-                  _root.role === 'Admin'
-                    ? () => handleEditClick(student)
-                    : undefined
-                }
-                style={{
-                  cursor: _root.role === 'Admin' ? 'pointer' : 'default',
-                }}
-              >
-                <td>{student.id}</td>
-                <td>{student.firstName}</td>
-                <td>{student.lastName}</td>
-                <td>{student.dateOfBirth.toString()}</td>
+            {filteredStudentList.length > 0 ? (
+              currentItems.map((student, index) => (
+                <tr
+                  key={index}
+                  onClick={
+                    _root.role === 'Admin'
+                      ? () => handleEditClick(student)
+                      : undefined
+                  }
+                  style={{
+                    cursor: _root.role === 'Admin' ? 'pointer' : 'default',
+                  }}
+                >
+                  <td>{student.id}</td>
+                  <td>{student.firstName}</td>
+                  <td>{student.lastName}</td>
+                  <td>{student.dateOfBirth.toString()}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>No records yet</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
         {/* Pagination */}

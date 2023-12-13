@@ -13,49 +13,30 @@ export class StudentService {
       if (!response.ok) {
         // Handle non-successful response (e.g., logging, throwing a specific error)
         console.error(`Failed to fetch students. Status: ${response.status}`);
-        throw new Error('Failed to fetch students');
+        return [];
       }
-  
       const students: StudentDto[] = await response.json();
-  
-      // Ensure that the response is an array of StudentDto
-      if (!Array.isArray(students)) {
-        throw new Error('Invalid response format. Expected an array of StudentDto.');
-      }
-  
       return students;
     } catch (error) {
       console.error('An error occurred during the getAllStudents API call:', error);
-      throw error; // Rethrow the error or handle it appropriately
+      return [];
     }
   }
   
   
   async addNewStudent(studentBasicDto: StudentBasicDto): Promise<StudentBasicDto | null> {
-    try {
-      const response = await fetch(StudentController.AddNewStudent, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(studentBasicDto),
-      });
-  
-      if (response.ok) {
-        const result: StudentBasicDto = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (result && typeof result === 'object') {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an object of StudentBasicDto.');
-        }
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('An error occurred during the addNewStudent API call:', error);
-      throw error; // Rethrow the error or handle it appropriately
+    const response = await fetch(StudentController.AddNewStudent, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(studentBasicDto),
+    });
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      return null;
     }
   }
   async updateStudent(id: number, studentBasicDto: StudentBasicDto): Promise<StudentBasicDto | null> {
@@ -70,19 +51,13 @@ export class StudentService {
   
       if (response.ok) {
         const result: StudentBasicDto = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (result && typeof result === 'object') {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an object of StudentBasicDto.');
-        }
+        return result;
       } else {
         return null;
       }
     } catch (error) {
       console.error('An error occurred during the updateStudent API call:', error);
-      throw error; // Rethrow the error or handle it appropriately
+      return null;
     }
   }
   
@@ -92,13 +67,7 @@ export class StudentService {
   
       if (response.ok) {
         const result: StudentNationalityDto = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (result && typeof result === 'object') {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an object of StudentNationalityDto.');
-        }
+        return result;
       } else {
         return null;
       }
@@ -116,13 +85,7 @@ export class StudentService {
   
       if (response.ok) {
         const result: StudentNationalityDto = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (result && typeof result === 'object') {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an object of StudentNationalityDto.');
-        }
+        return result;
       } else {
         return null;
       }
@@ -143,13 +106,7 @@ export class StudentService {
   
       if (response.ok) {
         const result: FamilyMemberBasicResponseDto[] = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (Array.isArray(result)) {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an array of FamilyMemberBasicResponseDto.');
-        }
+        return result;
       } else {
         return null;
       }
@@ -171,13 +128,7 @@ export class StudentService {
   
       if (response.ok) {
         const result: FamilyMemberBasicResponseDto = await response.json();
-  
-        // Ensure that the response is of the expected type
-        if (result && typeof result === 'object') {
-          return result;
-        } else {
-          throw new Error('Invalid response format. Expected an object of FamilyMemberBasicResponseDto.');
-        }
+        return result;
       } else {
         return null;
       }
