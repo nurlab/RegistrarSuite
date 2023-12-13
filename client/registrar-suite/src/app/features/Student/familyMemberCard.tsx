@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FamilyMemberBasicResponseDto } from 'src/@core/dto/FamilyMemberBasicResponseDto';
 import {
   addNewFamilyMember,
@@ -11,6 +11,9 @@ import {
 } from '../Home/rootSlice';
 import { FamilyMemberBasicDto } from 'src/@core/dto/FamilyMemberBasicDto';
 import { RelationshipType } from 'src/@core/enum/RelationshipType';
+import { UtilityService } from 'src/app/services/nationalityService copy';
+import { RootState } from 'src/app/store';
+import { FamilyMemberService } from 'src/app/services/familyMemberController';
 
 interface FamilyMemberCardProps {
   familyMember: FamilyMemberBasicResponseDto;
@@ -29,14 +32,24 @@ export const FamilyMemberCard = ({
   toggleAddForm,
 }: FamilyMemberCardProps) => {
   const dispatch = useDispatch();
+  const _utilityService = new UtilityService();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [validated, setValidated] = useState(false);
+  const _root = useSelector((state: RootState) => state.root);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: familyMember.firstName || '',
-    lastName: familyMember.lastName || '',
-    dateOfBirth: familyMember.dateOfBirth || '',
-    relationship: familyMember.relationship || 0,
-  });
+
+  const initializeFormData = () => {
+    return {
+      firstName: familyMember.firstName || '',
+      lastName: familyMember.lastName || '',
+      dateOfBirth: familyMember.dateOfBirth || '',
+      relationship: familyMember.relationship || 0,
+      nationality: '',
+    };
+  };
+  const [formData, setFormData] = useState(initializeFormData);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -68,49 +81,82 @@ export const FamilyMemberCard = ({
     setIsEditing(false);
     reLoad();
   };
-  const handleSaveChanges = async () => {
-    try {
-      dispatch(rootSlice.actions.updateFamilyMemberStart());
-      let data = new FamilyMemberBasicResponseDto();
-      data.firstName = formData.firstName;
-      data.lastName = formData.lastName;
-      data.dateOfBirth = formData.dateOfBirth;
-      data.relationship = formData.relationship;
-      let result: FamilyMemberBasicResponseDto | null;
-      result = await updateFamilyMember(studentId, data);
-      if (result == null)
-        dispatch(
-          rootSlice.actions.updateFamilyMemberFailure(
-            'Family Member Not Updated'
-          )
+  const handleSaveChanges = async (event: React.FormEvent<HTMLFormElement>) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      setValidated(true);
+    } else {
+      try {
+        dispatch(rootSlice.actions.updateFamilyMemberStart());
+        let data = new FamilyMemberBasicResponseDto();
+        data.firstName = formData.firstName;
+        data.lastName = formData.lastName;
+        data.dateOfBirth = formData.dateOfBirth;
+        data.relationship = formData.relationship;
+        let result: FamilyMemberBasicResponseDto | null;
+        result = await updateFamilyMember(studentId, data);
+        if (result == null)
+          dispatch(
+            rootSlice.actions.updateFamilyMemberFailure(
+              'Family Member Not Updated'
+            )
+          );
+        dispatch(rootSlice.actions.updateFamilyMemberSuccess(result));
+        const familyMemberService = new FamilyMemberService();
+        await familyMemberService.updateNationalityOfFamilyMember(
+          data?.id,
+          formData.nationality
         );
-      dispatch(rootSlice.actions.updateFamilyMemberSuccess(result));
-    } catch (error) {
-      dispatch(rootSlice.actions.updateFamilyMemberFailure(error));
+      } catch (error) {
+        dispatch(rootSlice.actions.updateFamilyMemberFailure(error));
+      }
+      setIsEditing(false);
+      reLoad();
+      initializeFormData();
     }
-    setIsEditing(false);
-    reLoad();
   };
-  const handleSaveNewFamily = async () => {
-    try {
-      dispatch(rootSlice.actions.addNewFamilyMemberStart());
-      let data = new FamilyMemberBasicDto();
-      data.firstName = formData.firstName;
-      data.lastName = formData.lastName;
-      data.dateOfBirth = formData.dateOfBirth;
-      data.relationship = formData.relationship;
-      let result: FamilyMemberBasicDto | null;
-      result = await addNewFamilyMember(studentId, data);
-      if (result == null)
-        dispatch(
-          rootSlice.actions.addNewFamilyMemberFailure('Family Member Not Saved')
-        );
-      dispatch(rootSlice.actions.addNewFamilyMemberSuccess(result));
-    } catch (error) {
-      dispatch(rootSlice.actions.addNewFamilyMemberFailure(error));
+
+  const handleSaveNewFamily = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      setValidated(true);
+    } else {
+      try {
+        dispatch(rootSlice.actions.addNewFamilyMemberStart());
+        let data = new FamilyMemberBasicDto();
+        data.firstName = formData.firstName;
+        data.lastName = formData.lastName;
+        data.dateOfBirth = formData.dateOfBirth;
+        data.relationship = formData.relationship;
+        let result: FamilyMemberBasicResponseDto | null;
+        result = await addNewFamilyMember(studentId, data);
+        if (result == null)
+          dispatch(
+            rootSlice.actions.addNewFamilyMemberFailure(
+              'Family Member Not Saved'
+            )
+          );
+        dispatch(rootSlice.actions.addNewFamilyMemberSuccess(result));
+        if (result?.id !== undefined && result?.id != null) {
+          const familyMemberService = new FamilyMemberService();
+          await familyMemberService.updateNationalityOfFamilyMember(
+            result?.id,
+            formData.nationality
+          );
+        }
+      } catch (error) {
+        dispatch(rootSlice.actions.addNewFamilyMemberFailure(error));
+      }
+      toggleAddForm();
+      reLoad();
+      initializeFormData();
     }
-    toggleAddForm();
-    reLoad();
   };
   const handleCancelAdd = () => {
     // isAdding = false;
@@ -121,7 +167,7 @@ export const FamilyMemberCard = ({
     <Card>
       <Card.Body>
         {mode === 'add' ? (
-          <Form>
+          <Form onSubmit={handleSaveNewFamily}>
             <Form.Group controlId="formFirstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
@@ -148,7 +194,7 @@ export const FamilyMemberCard = ({
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control
                 type="date"
-                value={new Date(formData.dateOfBirth).toString()}
+                value={_utilityService.formatDate(formData.dateOfBirth)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -176,8 +222,27 @@ export const FamilyMemberCard = ({
               </Form.Select>
             </Form.Group>
 
+            <Form.Group controlId="formNationality">
+              <Form.Label>Nationality</Form.Label>
+              <Form.Select
+                value={formData.nationality}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    nationality: e.target.value,
+                  })
+                }
+              >
+                {_root.nationalityList?.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
             <div className="py-3">
-              <Button variant="primary" onClick={handleSaveNewFamily}>
+              <Button variant="primary" type="submit">
                 Save Changes
               </Button>{' '}
               <Button variant="secondary" onClick={handleCancelAdd}>
@@ -190,7 +255,7 @@ export const FamilyMemberCard = ({
         )}
         {mode === 'edit' ? (
           isEditing ? (
-            <Form>
+            <Form onSubmit={handleSaveChanges}>
               <Form.Group controlId="formFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
@@ -217,7 +282,7 @@ export const FamilyMemberCard = ({
                 <Form.Label>Date of Birth</Form.Label>
                 <Form.Control
                   type="date"
-                  value={new Date(formData.dateOfBirth).toString()}
+                  value={_utilityService.formatDate(formData.dateOfBirth)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
@@ -245,8 +310,26 @@ export const FamilyMemberCard = ({
                 </Form.Select>
               </Form.Group>
 
+              <Form.Group controlId="formNationality">
+                <Form.Label>Nationality</Form.Label>
+                <Form.Select
+                  value={formData.nationality}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      nationality: e.target.value,
+                    })
+                  }
+                >
+                  {_root.nationalityList?.map((option) => (
+                    <option key={option.code} value={option.code}>
+                      {option.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
               <div className="py-3">
-                <Button variant="primary" onClick={handleSaveChanges}>
+                <Button variant="primary" type="submit">
                   Save Changes
                 </Button>{' '}
                 <Button variant="secondary" onClick={handleCancelEdit}>

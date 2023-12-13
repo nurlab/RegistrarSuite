@@ -6,6 +6,6 @@ export const FamilyMemberController = {
   DeleteFamilyMember: (id: number) => `${BaseURL}/api/FamilyMembers/${id}`,
   GetNationalityOfFamilyMember: (familyMemberId: number, nationalityId: number) =>
     `${BaseURL}/api/FamilyMembers/${familyMemberId}/Nationality/${nationalityId}`,
-  UpdateNationalityOfFamilyMember: (familyMemberId: number, nationalityId: number) =>
-    `${BaseURL}/api/FamilyMembers/${familyMemberId}/Nationality/${nationalityId}`,
+  UpdateNationalityOfFamilyMember: (familyMemberId: number, nationalityCode: string) =>
+    `${BaseURL}/api/FamilyMembers/${familyMemberId}/Nationality/${nationalityCode}`,
 };

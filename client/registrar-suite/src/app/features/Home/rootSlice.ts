@@ -4,7 +4,6 @@ import { FamilyMemberBasicDto } from "src/@core/dto/FamilyMemberBasicDto";
 import { FamilyMemberBasicResponseDto } from "src/@core/dto/FamilyMemberBasicResponseDto";
 import { StudentBasicDto } from "src/@core/dto/StudentBasicDto";
 import { StudentDto } from "src/@core/dto/StudentDto";
-import { StudentNationalityDto } from "src/@core/dto/StudentNationalityDto";
 import { FamilyMemberService } from "src/app/services/familyMemberController";
 import { NationalityService } from "src/app/services/nationalityService";
 import { StudentService } from "src/app/services/studentService";
@@ -29,7 +28,7 @@ export const addNewFamilyMember = async (id: number , _familyMemberBasicDto : Fa
   const familyMember = await studentService.addFamilyMember(id,_familyMemberBasicDto);
   return familyMember;
 };
-export const updateFamilyMember = async (id: number , _familyMemberBasicResponseDto : FamilyMemberBasicResponseDto) => {
+export const updateFamilyMember = async (id: number , _familyMemberBasicResponseDto : FamilyMemberBasicDto) => {
   const familyMemberService = new FamilyMemberService();
   const familyMember = await familyMemberService.updateFamilyMember(id,_familyMemberBasicResponseDto);
   return familyMember;
@@ -197,9 +196,8 @@ export const updateStduentNationality = async (id: number, code:string) => {
         state.nationalityList = action.payload;
 
       },
-      updateStduentNationality: (state, action) => {
+      updateStduentNationality: (state) => {
         state.loading = false;
-        state.error = action.payload;
       },
       //#endregion
       

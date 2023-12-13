@@ -14,6 +14,7 @@ import {
 } from '../Home/rootSlice';
 import { FamilyMemberCard } from './familyMemberCard';
 import { CountryDto } from 'src/@core/dto/CountryDto';
+import { UtilityService } from 'src/app/services/nationalityService copy';
 
 interface EditStudentProps {
   showModal: boolean;
@@ -27,6 +28,8 @@ const EditStudent: React.FC<EditStudentProps> = ({
   handleClose,
 }) => {
   const dispatch = useDispatch();
+  const _utilityService = new UtilityService();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [validated, setValidated] = useState(false);
   const _root = useSelector((state: RootState) => state.root);
@@ -38,9 +41,6 @@ const EditStudent: React.FC<EditStudentProps> = ({
     nationality: '',
   });
 
-  // const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
-  //   null
-  // );
   const [showAddForm, setShowAddForm] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +76,7 @@ const EditStudent: React.FC<EditStudentProps> = ({
           id: student.id,
           firstName: student.firstName,
           lastName: student.lastName,
-          dateOfBirth: student.dateOfBirth, // Remove toString() if not needed
+          dateOfBirth: student.dateOfBirth,
           nationality: result?.nationalityCode ?? '',
         });
 
@@ -108,7 +108,7 @@ const EditStudent: React.FC<EditStudentProps> = ({
       const studentBasic: StudentBasicDto = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        dateOfBirth: formData.dateOfBirth,
+        dateOfBirth: formData.dateOfBirth.toString(),
       };
       const nationality = formData.nationality;
 
@@ -169,7 +169,7 @@ const EditStudent: React.FC<EditStudentProps> = ({
                     required
                     type="date"
                     name="dateOfBirth"
-                    value={formData.dateOfBirth}
+                    value={_utilityService.formatDate(formData.dateOfBirth)}
                     onChange={handleInputChange}
                   />
                 </Form.Group>

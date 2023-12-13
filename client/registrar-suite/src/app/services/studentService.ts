@@ -81,7 +81,7 @@ export class StudentService {
     }
   }
 
-  async addFamilyMember(id: number, requestDto: FamilyMemberBasicDto): Promise<FamilyMemberBasicDto | null> {
+  async addFamilyMember(id: number, requestDto: FamilyMemberBasicDto): Promise<FamilyMemberBasicResponseDto | null> {
     const response = await fetch(StudentController.AddFamilyMember(id), {
       method: 'POST',
       headers: {

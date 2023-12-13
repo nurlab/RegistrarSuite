@@ -41,8 +41,8 @@ export class FamilyMemberService {
     }
   }
 
-  async updateNationalityOfFamilyMember(familyMemberId: number, nationalityId: number): Promise<FamilyMemberDto | null> {
-    const response = await fetch(FamilyMemberController.UpdateNationalityOfFamilyMember(familyMemberId, nationalityId), {
+  async updateNationalityOfFamilyMember(familyMemberId: number, nationalityCode: string): Promise<FamilyMemberDto | null> {
+    const response = await fetch(FamilyMemberController.UpdateNationalityOfFamilyMember(familyMemberId, nationalityCode), {
       method: 'PUT',
     });
 
