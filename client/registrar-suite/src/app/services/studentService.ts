@@ -2,10 +2,11 @@ import { StudentController } from "src/@core/APIs/StudentController";
 import { FamilyMemberBasicDto } from "src/@core/dto/FamilyMemberBasicDto";
 import { FamilyMemberBasicResponseDto } from "src/@core/dto/FamilyMemberBasicResponseDto";
 import { StudentBasicDto } from "src/@core/dto/StudentBasicDto";
+import { StudentDto } from "src/@core/dto/StudentDto";
 import { StudentNationalityDto } from "src/@core/dto/StudentNationalityDto";
 
 export class StudentService {
-  async getAllStudents(): Promise<StudentBasicDto[]> {
+  async getAllStudents(): Promise<StudentDto[]> {
     try {
       const response = await fetch(StudentController.GetAllStudents);
       const resjs = await response.json();
@@ -18,7 +19,6 @@ export class StudentService {
   
 
   async addNewStudent(studentBasicDto: StudentBasicDto): Promise<StudentBasicDto | null> {
-    console.log('====================================');
     const response = await fetch(StudentController.AddNewStudent, {
       method: 'POST',
       headers: {
@@ -55,8 +55,8 @@ export class StudentService {
     return response.json();
   }
 
-  async updateStudentNationality(id: number, nationalityId: number): Promise<StudentNationalityDto | null> {
-    const response = await fetch(StudentController.UpdateStudentNationality(id, nationalityId), {
+  async updateStudentNationality(id: number, code: string): Promise<StudentNationalityDto | null> {
+    const response = await fetch(StudentController.UpdateStudentNationality(id, code), {
       method: 'PUT',
     });
 
@@ -68,7 +68,11 @@ export class StudentService {
   }
 
   async getFamilyMembers(id: number): Promise<FamilyMemberBasicResponseDto[] | null> {
-    const response = await fetch(StudentController.GetFamilyMembers(id));
+    const response = await fetch(StudentController.GetFamilyMembers(id), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }});
     
     if (response.ok) {
       return response.json();

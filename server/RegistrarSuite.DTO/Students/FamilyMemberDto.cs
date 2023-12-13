@@ -16,7 +16,7 @@ namespace RegistrarSuite.DTO.Students
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public RelationshipType Relationship { get; set; }
-        public CountryDto? Nationality { get; set; }
+        public string NationalityCode { get; set; }
 
     }    
     public class FamilyMemberBasicDto

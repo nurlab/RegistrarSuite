@@ -1,20 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using RegistrarSuite.Data.DataContext;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using RegistrarSuite.Services;
 using AutoMapper;
 using RegistrarSuite.Data.Seed;
-using Microsoft.Extensions.Logging;
+using NLog.Web;
+using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,6 +29,12 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<DataSeedInitializations>();
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddNLogWeb("nlog.config");  
+});
 
 var corePolicy = "_CustomCorePolicy";
 builder.Services.AddCors(options =>

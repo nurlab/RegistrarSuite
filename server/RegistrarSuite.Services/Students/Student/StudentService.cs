@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using RegistrarSuite.Data.Models.MetadataSchema;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 
 namespace RegistrarSuite.Services.Students
 {
@@ -19,13 +20,12 @@ namespace RegistrarSuite.Services.Students
         private readonly ICountryRepository _countryRepository;
         private readonly IFamilyMemberRepository _familyMemberRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public StudentService(IMapper mapper,
-            IUnitOfWork<AppDbContext> unitOfWork, IStudentRepository studentRepository, ILogger<StudentService> logger, ICountryRepository countryRepository, IFamilyMemberRepository familyMemberRepository
+            IUnitOfWork<AppDbContext> unitOfWork, IStudentRepository studentRepository, ICountryRepository countryRepository, IFamilyMemberRepository familyMemberRepository
             )
         {
-            _logger = logger;
             _unitOfWork = unitOfWork;
             _studentRepository = studentRepository;
             _countryRepository = countryRepository;
@@ -37,7 +37,7 @@ namespace RegistrarSuite.Services.Students
         {
             try
             {
-                var students = await _studentRepository.GetAllAsync();
+                var students = await _studentRepository.GetAllAsync(x => !x.IsDeleted);
 
                 if (students != null)
                 {
@@ -47,14 +47,14 @@ namespace RegistrarSuite.Services.Students
                 }
                 else
                 {
-                    _logger.LogError($"No students found");
+                    _logger.Error($"No students found");
                     return null;
                 }
 
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
@@ -71,14 +71,13 @@ namespace RegistrarSuite.Services.Students
                 newStudent.UpdatedOn = null;
                 newStudent.IsActive = true;
                 newStudent.IsDeleted = false;
-                newStudent.Nationality = null;
 
                 await _studentRepository.AddAsync(newStudent);
 
                 int save = await _unitOfWork.CommitAsync();
                 if (save == 0)
                 {
-                    _logger.LogError("Failed to save the Student");
+                    _logger.Error("Failed to save the Student");
                     return null; ;
                 }
 
@@ -88,7 +87,7 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
@@ -107,14 +106,14 @@ namespace RegistrarSuite.Services.Students
                     newStudent.UpdatedOn = DateTime.Now;
                     newStudent.CreatedBy = studentExist.CreatedBy;
                     newStudent.CreatedOn = studentExist.CreatedOn;
-                    newStudent.Nationality = studentExist.Nationality;
+                    newStudent.NationalityCode = studentExist.NationalityCode;
 
                     var updatedStudent = _studentRepository.Update(newStudent);
 
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
                     {
-                        _logger.LogError("Failed to update the Student");
+                        _logger.Error("Failed to update the Student");
                         return null; ;
                     }
 
@@ -124,13 +123,13 @@ namespace RegistrarSuite.Services.Students
                 }
                 else
                 {
-                    _logger.LogError($"student {id} does not exist");
+                    _logger.Error($"student {id} does not exist");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
@@ -139,7 +138,7 @@ namespace RegistrarSuite.Services.Students
         {
             try
             {
-                var studentExist = _studentRepository.GetFirstOrDefault(x => x.Id == id);
+                var studentExist = _studentRepository.GetFirstOrDefault(x => x.Id == id && !x.IsDeleted);
                 if (studentExist != null)
                 {
                     StudentNationalityDto studentNationalityDto = _mapper.Map<StudentNationalityDto>(studentExist); ;
@@ -147,18 +146,18 @@ namespace RegistrarSuite.Services.Students
                 }
                 else
                 {
-                    _logger.LogError($"student {id} does not exist");
+                    _logger.Error($"student {id} does not exist");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
 
-        public async Task<StudentNationalityDto?> UpdateStudentNationality(int id, int nationalityId)
+        public async Task<StudentNationalityDto?> UpdateStudentNationality(int id, string nationalityCode)
         {
             try
             {
@@ -168,17 +167,17 @@ namespace RegistrarSuite.Services.Students
                 {
                     StudentNationalityDto studentDto = _mapper.Map<StudentNationalityDto>(studentExist); ;
 
-                    Country country = _countryRepository.GetFirstOrDefault(x => x.Id == nationalityId);
+                    Country country = _countryRepository.GetFirstOrDefault(x => x.Code == nationalityCode);
 
                     if (country != null)
                     {
                         studentExist.UpdatedBy = 1;  // will be replaced by Logged in User Id when Identity feature is built
                         studentExist.UpdatedOn = DateTime.Now;
-                        studentExist.Nationality = country;
+                        studentExist.NationalityCode = country.Code;
                     }
                     else
                     {
-                        _logger.LogError($"nationality {nationalityId} does not exist");
+                        _logger.Error($"nationality {nationalityCode} does not exist");
                         return null;
                     }
 
@@ -189,20 +188,20 @@ namespace RegistrarSuite.Services.Students
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
                     {
-                        _logger.LogError("Failed to update the Nationality");
+                        _logger.Error("Failed to update the Nationality");
                         return null; ;
                     }
                     return updatesStudentDto;
                 }
                 else
                 {
-                    _logger.LogError($"student {id} does not exist");
+                    _logger.Error($"student {id} does not exist");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
@@ -219,16 +218,16 @@ namespace RegistrarSuite.Services.Students
                 {
                     if (student?.FamilyMembers?.Any() == true)
                     {
-                        List<FamilyMemberBasicResponseDto> familyMemberListDto = _mapper.Map<List<FamilyMemberBasicResponseDto>>(student.FamilyMembers);
+                        List<FamilyMemberBasicResponseDto> familyMemberListDto = _mapper.Map<List<FamilyMemberBasicResponseDto>>(student.FamilyMembers.Where(x => !x.IsDeleted).OrderBy(x=>x.UpdatedOn).OrderBy(x => x.CreatedOn));
                         return familyMemberListDto;
                     }
 
-                    _logger.LogError($" student {id} does not have any family registered");
+                    _logger.Error($" student {id} does not have any family registered");
                     return null;
                 }
                 else
                 {
-                    _logger.LogError($"student {id} does not exist");
+                    _logger.Error($"student {id} does not exist");
                     return null;
                 }
 
@@ -236,7 +235,7 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetFamilyMembers: {ex}");
+                _logger.Error($"Error in GetFamilyMembers: {ex}");
                 throw;
             }
         }
@@ -260,7 +259,7 @@ namespace RegistrarSuite.Services.Students
                 int save = await _unitOfWork.CommitAsync();
                 if (save == 0)
                 {
-                    _logger.LogError("Failed to save the Family Member");
+                    _logger.Error("Failed to save the Family Member");
                     return null;
                 }
 
@@ -271,7 +270,7 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetFamilyMembers: {ex}");
+                _logger.Error($"Error in GetFamilyMembers: {ex}");
                 throw;
             }
         }

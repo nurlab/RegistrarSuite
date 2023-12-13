@@ -19,8 +19,7 @@ namespace RegistrarSuite.Data.Models.StudentSchema
 
         public required RelationshipType Relationship { get; set; }
 
-        public int? NationalityId { get; set; }
-        public virtual Country? Nationality { get; set; }
+        public string? NationalityCode { get; set; }
 
         public int? StudentId { get; set; }
         public virtual Student? Student { get; set; }

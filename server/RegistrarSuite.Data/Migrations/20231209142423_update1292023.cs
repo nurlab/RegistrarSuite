@@ -12,7 +12,7 @@ namespace RegistrarSuite.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_FamilyMembers_Countries_NationalityId",
+                name: "FK_FamilyMembers_Countries_nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers");
 
@@ -48,7 +48,7 @@ namespace RegistrarSuite.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
-                name: "NationalityId",
+                name: "nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers",
                 type: "INTEGER",
@@ -79,10 +79,10 @@ namespace RegistrarSuite.Data.Migrations
                 column: "StudentId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FamilyMembers_Countries_NationalityId",
+                name: "FK_FamilyMembers_Countries_nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers",
-                column: "NationalityId",
+                column: "nationalityCode",
                 principalSchema: "Metadata",
                 principalTable: "Countries",
                 principalColumn: "Id");
@@ -101,7 +101,7 @@ namespace RegistrarSuite.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_FamilyMembers_Countries_NationalityId",
+                name: "FK_FamilyMembers_Countries_nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers");
 
@@ -142,7 +142,7 @@ namespace RegistrarSuite.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
-                name: "NationalityId",
+                name: "nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers",
                 type: "INTEGER",
@@ -166,10 +166,10 @@ namespace RegistrarSuite.Data.Migrations
                 column: "StudentId1");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FamilyMembers_Countries_NationalityId",
+                name: "FK_FamilyMembers_Countries_nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers",
-                column: "NationalityId",
+                column: "nationalityCode",
                 principalSchema: "Metadata",
                 principalTable: "Countries",
                 principalColumn: "Id",

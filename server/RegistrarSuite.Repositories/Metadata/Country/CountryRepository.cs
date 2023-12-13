@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RegistrarSuite.Data.DataContext;
+﻿using RegistrarSuite.Data.DataContext;
+using RegistrarSuite.Data.Models.MetadataSchema;
 using RegistrarSuite.Repositories.Generics;
 
 namespace RegistrarSuite.Repositories.Metadata
 {
-    public class CountryRepository : GRepository<Data.Models.MetadataSchema.Country>, ICountryRepository
+    public class CountryRepository : GRepository<Country>, ICountryRepository
     {
         private readonly AppDbContext _appDbContext;
         public CountryRepository(AppDbContext appDbContext) : base(appDbContext)

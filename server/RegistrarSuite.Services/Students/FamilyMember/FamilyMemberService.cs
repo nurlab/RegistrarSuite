@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using NLog;
 using RegistrarSuite.Data.DataContext;
 using RegistrarSuite.Data.Models.StudentSchema;
 using RegistrarSuite.DTO.Students;
@@ -14,15 +15,13 @@ namespace RegistrarSuite.Services.Students
         private readonly IUnitOfWork<AppDbContext> _unitOfWork;
         private readonly IFamilyMemberRepository _familyMemberRepository;
         private readonly ICountryRepository _countryRepository;
-        private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public FamilyMemberService(IMapper mapper,
-            IUnitOfWork<AppDbContext> unitOfWork, IFamilyMemberRepository familyMemberRepository , ICountryRepository countryRepository, ILogger logger
-            )
+            IUnitOfWork<AppDbContext> unitOfWork, IFamilyMemberRepository familyMemberRepository , ICountryRepository countryRepository)
         {
             _mapper = mapper;
-            _logger = logger;
             _familyMemberRepository = familyMemberRepository;
             _countryRepository = countryRepository;
             _unitOfWork = unitOfWork;
@@ -43,13 +42,13 @@ namespace RegistrarSuite.Services.Students
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
                     {
-                        _logger.LogError($"Failed to remove the family member {id}");
+                        _logger.Error($"Failed to remove the family member {id}");
                         return false; ;
                     }
                 }
                 else
                 {
-                    _logger.LogError($"family member {id} does not exist");
+                    _logger.Error($"family member {id} does not exist");
                     return false; ;
                 }
 
@@ -57,15 +56,15 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
 
         }
 
-        public async Task<FamilyMemberDto?> GetNationalityOfFamilyMember(int familyMemberId, int nationalityId)
+        public async Task<FamilyMemberDto?> GetNationalityOfFamilyMember(int familyMemberId, string nationalityCode)
         {
-            // NOTE : Parameter nationalityId unused because the nationality is already extracted with the familyMemberId;
+            // NOTE : Parameter nationalityCode unused because the nationality is already extracted with the familyMemberId;
             try
             {
                 var familyMember = await _familyMemberRepository.GetFirstOrDefaultAsync(x => x.Id == familyMemberId);
@@ -76,13 +75,13 @@ namespace RegistrarSuite.Services.Students
                 }
                 else
                 {
-                    _logger.LogError($"family member {familyMemberId} does not exist");
+                    _logger.Error($"family member {familyMemberId} does not exist");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }
@@ -108,13 +107,13 @@ namespace RegistrarSuite.Services.Students
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
                     {
-                        _logger.LogError($"Failed to update the family member {id}");
+                        _logger.Error($"Failed to update the family member {id}");
                         return null;
                     }
                 }
                 else
                 {
-                    _logger.LogError($"family member {id} does not exist");
+                    _logger.Error($"family member {id} does not exist");
                     return null;
                 }
                 var updatedFamilyMember = _mapper.Map<FamilyMemberBasicResponseDto>(familyMember);
@@ -123,13 +122,13 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
 
         }
 
-        public async Task<FamilyMemberDto?> UpdateNationalityOfFamilyMember(int familyMemberId, int nationalityId)
+        public async Task<FamilyMemberDto?> UpdateNationalityOfFamilyMember(int familyMemberId, string nationalityCode)
         {
             try
             {
@@ -137,14 +136,14 @@ namespace RegistrarSuite.Services.Students
 
                 if (familyMember != null)
                 {
-                    var country = await _countryRepository.GetFirstOrDefaultAsync(x => x.Id == nationalityId);
+                    var country = await _countryRepository.GetFirstOrDefaultAsync(x => x.Code == nationalityCode);
                     if(country != null)
                     {
-                        familyMember.NationalityId = nationalityId;
+                        familyMember.NationalityCode = nationalityCode;
                     }
                     else
                     {
-                        _logger.LogError($"Failed to find Nationality {nationalityId}");
+                        _logger.Error($"Failed to find Nationality {nationalityCode}");
                         return null;
                     }
 
@@ -153,13 +152,13 @@ namespace RegistrarSuite.Services.Students
                     int save = await _unitOfWork.CommitAsync();
                     if (save == 0)
                     {
-                        _logger.LogError($"Failed to update the family member {familyMemberId}");
+                        _logger.Error($"Failed to update the family member {familyMemberId}");
                         return null;
                     }
                 }
                 else
                 {
-                    _logger.LogError($"family member {familyMemberId} does not exist");
+                    _logger.Error($"family member {familyMemberId} does not exist");
                     return null;
                 }
                 var updatedFamilyMember = _mapper.Map<FamilyMemberDto>(familyMember);
@@ -169,7 +168,7 @@ namespace RegistrarSuite.Services.Students
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in row '{ex}'");
+                _logger.Error($"Error in row '{ex}'");
                 throw;
             }
         }

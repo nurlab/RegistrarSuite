@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using NLog;
 using RegistrarSuite.Data.DataContext;
 using RegistrarSuite.DTO.Metadata;
 using RegistrarSuite.Repositories.Metadata;
@@ -13,8 +14,8 @@ namespace RegistrarSuite.Services.Metadata
 
         private readonly IUnitOfWork<AppDbContext> _unitOfWork;
         private readonly ICountryRepository _countryRepository;
-        private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public CountryService(IMapper mapper,
             IUnitOfWork<AppDbContext> unitOfWork , ICountryRepository countryRepository
@@ -27,18 +28,26 @@ namespace RegistrarSuite.Services.Metadata
 
         public async Task<List<CountryDto>> GetNationalities()
         {
-            var countryList = await _countryRepository.GetAllAsync();
+            try
+            {
+                var countryList = await _countryRepository.GetAllAsync();
 
-            if (countryList != null)
-            {
-                List<CountryDto> countryDrpListDto = _mapper.Map<List<CountryDto>>(countryList);
-                return countryDrpListDto;
+                if (countryList != null)
+                {
+                    List<CountryDto> countryDrpListDto = _mapper.Map<List<CountryDto>>(countryList);
+                    return countryDrpListDto;
+                }
+                else
+                {
+                    _logger.Error($"No Country found in system");
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogError($"No Country found in system");
-                return null;
+                _logger.Error($"Error in row '{ex}'");
+                throw;
             }
-        }
+}
     }
 }

@@ -6,11 +6,6 @@ import { FamilyMemberDto } from "src/@core/dto/FamilyMemberDto";
 
 
 export class FamilyMemberService {
-  private readonly baseUrl: string;
-
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
 
   async updateFamilyMember(id: number, familyMemberBasicDto: FamilyMemberBasicDto): Promise<FamilyMemberBasicResponseDto | null> {
     const response = await fetch(FamilyMemberController.UpdateFamilyMember(id), {

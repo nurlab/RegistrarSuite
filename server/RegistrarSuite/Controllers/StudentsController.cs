@@ -53,10 +53,10 @@ namespace RegistrarSuite.Controllers
 
         // Updates a Student’s Nationality
         // PUT /api/Students/{id}/Nationality/{id}
-        [HttpPut("{id}/Nationality/{nationalityId}")]
-        public async Task<StudentNationalityDto?> UpdateStudentNationality(int id, int nationalityId)
+        [HttpPut("{id}/Nationality/{nationalityCode}")]
+        public async Task<StudentNationalityDto?> UpdateStudentNationality(int id, string nationalityCode)
         {
-            StudentNationalityDto? result = await _studentService.UpdateStudentNationality(id, nationalityId);
+            StudentNationalityDto? result = await _studentService.UpdateStudentNationality(id, nationalityCode);
             return result;
         }
 

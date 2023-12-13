@@ -6,7 +6,7 @@ export const StudentController = {
   AddNewStudent: BaseURL + '/api/Students',
   UpdateStudent: (id: number) => `${BaseURL}/api/Students/${id}`,
   GetStudentNationality: (id: number) => `${BaseURL}/api/Students/${id}/Nationality`,
-  UpdateStudentNationality: (id: number, nationalityId: number) => `${BaseURL}/api/Students/${id}/Nationality/${nationalityId}`,
+  UpdateStudentNationality: (id: number, code: string) => `${BaseURL}/api/Students/${id}/Nationality/${code}`,
   GetFamilyMembers: (id: number) => `${BaseURL}/api/Students/${id}/FamilyMembers`,
   AddFamilyMember: (id: number) => `${BaseURL}/api/Students/${id}/FamilyMembers`,
 };

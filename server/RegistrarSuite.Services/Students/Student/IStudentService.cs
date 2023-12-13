@@ -52,13 +52,13 @@ namespace RegistrarSuite.Services.Students
         /// Updates a Student's Nationality.
         /// </summary>
         /// <param name="id">The identifier of the student whose nationality is being updated.</param>
-        /// <param name="nationalityId">The identifier of the new nationality for the student.</param>
+        /// <param name="nationalityCode">The identifier of the new nationality for the student.</param>
         /// <returns>
         /// A <see cref="Task{StudentNationalityDto}"/> representing the asynchronous operation.
         /// The task result is a <see cref="StudentNationalityDto"/> containing information about the updated nationality.
         /// If the student or nationality is not found, returns <c>null</c>.
         /// </returns>
-        Task<StudentNationalityDto?> UpdateStudentNationality(int id, int nationalityId);
+        Task<StudentNationalityDto?> UpdateStudentNationality(int id, string nationalityCode);
 
         /// <summary>
         /// Retrieves a list of Family Members for a particular Student.

@@ -55,7 +55,7 @@ namespace RegistrarSuite.Data.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    NationalityId = table.Column<int>(type: "INTEGER", nullable: true),
+                    nationalityCode = table.Column<int>(type: "INTEGER", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedBy = table.Column<int>(type: "INTEGER", nullable: true),
@@ -67,8 +67,8 @@ namespace RegistrarSuite.Data.Migrations
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Countries_NationalityId",
-                        column: x => x.NationalityId,
+                        name: "FK_Students_Countries_nationalityCode",
+                        column: x => x.nationalityCode,
                         principalSchema: "Metadata",
                         principalTable: "Countries",
                         principalColumn: "Id");
@@ -83,7 +83,7 @@ namespace RegistrarSuite.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Relationship = table.Column<int>(type: "INTEGER", nullable: false),
-                    NationalityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    nationalityCode = table.Column<int>(type: "INTEGER", nullable: false),
                     StudentId = table.Column<string>(type: "TEXT", nullable: true),
                     StudentId1 = table.Column<int>(type: "INTEGER", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -97,8 +97,8 @@ namespace RegistrarSuite.Data.Migrations
                 {
                     table.PrimaryKey("PK_FamilyMembers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FamilyMembers_Countries_NationalityId",
-                        column: x => x.NationalityId,
+                        name: "FK_FamilyMembers_Countries_nationalityCode",
+                        column: x => x.nationalityCode,
                         principalSchema: "Metadata",
                         principalTable: "Countries",
                         principalColumn: "Id",
@@ -112,10 +112,10 @@ namespace RegistrarSuite.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_FamilyMembers_NationalityId",
+                name: "IX_FamilyMembers_nationalityCode",
                 schema: "Student",
                 table: "FamilyMembers",
-                column: "NationalityId");
+                column: "nationalityCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FamilyMembers_StudentId1",
@@ -124,10 +124,10 @@ namespace RegistrarSuite.Data.Migrations
                 column: "StudentId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_NationalityId",
+                name: "IX_Students_nationalityCode",
                 schema: "Student",
                 table: "Students",
-                column: "NationalityId");
+                column: "nationalityCode");
         }
 
         /// <inheritdoc />

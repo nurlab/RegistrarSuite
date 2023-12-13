@@ -1,8 +1,6 @@
-
-export class FamilyMemberBasicResponseDto {
+export class StudentDto {
   id!: number;
   firstName!: string;
   lastName!: string;
   dateOfBirth!: string;
-  relationship!: number;
 }

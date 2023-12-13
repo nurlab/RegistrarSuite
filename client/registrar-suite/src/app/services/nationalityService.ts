@@ -1,16 +1,17 @@
 import { NationalityController } from "src/@core/APIs/NationalityController";
-import { CountryDrpDto } from "src/@core/dto/CountryDto";
+import { CountryDto } from "src/@core/dto/CountryDto";
 
-export class NationalityService {
-    private readonly baseUrl: string;
+export class NationalityService {  
   
-    constructor(baseUrl: string) {
-      this.baseUrl = baseUrl;
-    }
-  
-    async getNationalities(): Promise<CountryDrpDto[]> {
-      const response = await fetch(NationalityController.GetNationalities);
-      return response.json();
+    async getNationalities(): Promise<CountryDto[]> {
+      try {
+        const response = await fetch(NationalityController.GetNationalities);
+        const resjs = await response.json();
+        return resjs;
+      } catch (error) {
+        console.error('Error:', error);
+        throw error; // Rethrow the error or handle it appropriately
+      }
     }
   }
   

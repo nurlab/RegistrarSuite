@@ -108,7 +108,7 @@ namespace RegistrarSuite.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("NationalityId")
+                    b.Property<int?>("nationalityCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Relationship")
@@ -125,7 +125,7 @@ namespace RegistrarSuite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NationalityId");
+                    b.HasIndex("nationalityCode");
 
                     b.HasIndex("StudentId");
 
@@ -161,7 +161,7 @@ namespace RegistrarSuite.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("NationalityId")
+                    b.Property<int?>("nationalityCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("UpdatedBy")
@@ -172,7 +172,7 @@ namespace RegistrarSuite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NationalityId");
+                    b.HasIndex("nationalityCode");
 
                     b.ToTable("Students", "Student");
                 });
@@ -181,7 +181,7 @@ namespace RegistrarSuite.Data.Migrations
                 {
                     b.HasOne("RegistrarSuite.Data.Models.MetadataSchema.Country", "Nationality")
                         .WithMany()
-                        .HasForeignKey("NationalityId");
+                        .HasForeignKey("nationalityCode");
 
                     b.HasOne("RegistrarSuite.Data.Models.StudentSchema.Student", "Student")
                         .WithMany("FamilyMembers")
@@ -196,7 +196,7 @@ namespace RegistrarSuite.Data.Migrations
                 {
                     b.HasOne("RegistrarSuite.Data.Models.MetadataSchema.Country", "Nationality")
                         .WithMany()
-                        .HasForeignKey("NationalityId");
+                        .HasForeignKey("nationalityCode");
 
                     b.Navigation("Nationality");
                 });

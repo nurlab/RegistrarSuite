@@ -35,19 +35,19 @@ namespace RegistrarSuite.Controllers
 
         //Gets a nationality associated with a family member
         //[GET] /api/FamilyMembers/{id}/Nationality/{id}
-        [HttpGet("{familyMemberId}/Nationality/{nationalityId}")]
-        public async Task<FamilyMemberDto> GetNationalityOfFamilyMember(int familyMemberId, int nationalityId)
+        [HttpGet("{familyMemberId}/Nationality/{nationalityCode}")]
+        public async Task<FamilyMemberDto> GetNationalityOfFamilyMember(int familyMemberId, string nationalityCode)
         {
-            FamilyMemberDto? result = await _familyMemberService.GetNationalityOfFamilyMember(familyMemberId,nationalityId);
+            FamilyMemberDto? result = await _familyMemberService.GetNationalityOfFamilyMember(familyMemberId,nationalityCode);
             return result;
         }
 
         //Updates a particular Family Member’s Nationality
         //[PUT] /api/FamilyMembers/{id}/Nationality/{id}
-        [HttpPut("{familyMemberId}/Nationality/{nationalityId}")]
-        public async Task<FamilyMemberDto> UpdateNationalityOfFamilyMember(int familyMemberId, int nationalityId)
+        [HttpPut("{familyMemberId}/Nationality/{nationalityCode}")]
+        public async Task<FamilyMemberDto> UpdateNationalityOfFamilyMember(int familyMemberId, string nationalityCode)
         {
-            FamilyMemberDto? result = await _familyMemberService.UpdateNationalityOfFamilyMember(familyMemberId, nationalityId);
+            FamilyMemberDto? result = await _familyMemberService.UpdateNationalityOfFamilyMember(familyMemberId, nationalityCode);
             return result;
         }
 

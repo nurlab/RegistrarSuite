@@ -16,7 +16,7 @@ namespace RegistrarSuite.Data.Models.StudentSchema
         public required string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        public required Country? Nationality { get; set; }
+        public required string? NationalityCode { get; set; }
 
         public virtual ICollection<FamilyMember>? FamilyMembers { get; set; }
 
