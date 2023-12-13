@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { FamilyMemberBasicResponseDto } from 'src/@core/dto/FamilyMemberBasicResponseDto';
@@ -14,10 +14,10 @@ import { RelationshipType } from 'src/@core/enum/RelationshipType';
 import { RootState } from 'src/app/store';
 import { UtilityService } from 'src/app/services/utilityService';
 import { FamilyMemberService } from 'src/app/services/FamilyMemberService';
+import { FamilyMemberDto } from 'src/@core/dto/FamilyMemberDto';
 
 interface FamilyMemberCardProps {
   familyMember: FamilyMemberBasicResponseDto;
-  nationalityCode: string;
   studentId: number;
   reLoad: () => void;
   mode: string;
@@ -26,7 +26,6 @@ interface FamilyMemberCardProps {
 }
 export const FamilyMemberCard = ({
   familyMember,
-  nationalityCode,
   studentId,
   reLoad,
   mode = '',
@@ -48,12 +47,41 @@ export const FamilyMemberCard = ({
       lastName: familyMember.lastName || '',
       dateOfBirth: familyMember.dateOfBirth || '',
       relationship: familyMember.relationship || 0,
-      nationalityCode: nationalityCode,
+      nationalityCode: '',
     };
   };
   const [formData, setFormData] = useState(initializeFormData);
 
+  useEffect(() => {
+    // Fetch nationality when the component mounts or familyMember.id changes
+    getNationalityOfFamilyMember();
+  }, [familyMember, studentId]);
+
+  const getNationalityOfFamilyMember = async (): Promise<void> => {
+    if (familyMember.id !== 0) {
+      let result: FamilyMemberDto | null = null;
+      const familyMemberService = new FamilyMemberService();
+
+      try {
+        result = await familyMemberService.getNationalityOfFamilyMember(
+          familyMember.id,
+          familyMember.id
+        );
+
+        if (result != null && result?.nationalityCode !== undefined) {
+          setFormData({
+            ...formData,
+            nationalityCode: result?.nationalityCode,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching nationality:', error);
+      }
+    }
+  };
+
   const handleEditClick = () => {
+    getNationalityOfFamilyMember();
     setIsEditing(true);
   };
 

@@ -5,5 +5,5 @@ export class FamilyMemberDto {
   lastName!: string;
   dateOfBirth!: Date;
   relationship!: number;
-  nationality?: string;
+  nationalityCode?: string;
 }
