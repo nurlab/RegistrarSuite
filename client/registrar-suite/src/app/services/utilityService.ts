@@ -14,4 +14,9 @@ export class UtilityService {
         throw error; // Rethrow the error or handle it appropriately
       }
     }
+    convertToReadable (dateString: string) :string {
+      if(dateString === undefined || dateString === null || dateString ==='') return ''
+      const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+      return new Date(dateString).toLocaleDateString('en-US', options);
+ };
   }

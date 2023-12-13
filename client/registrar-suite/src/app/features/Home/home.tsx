@@ -8,9 +8,11 @@ import { useEffect } from 'react';
 import { StudentDto } from 'src/@core/dto/StudentDto';
 import EditStudent from '../Student/editStudent';
 import { StudentBasicDto } from 'src/@core/dto/StudentBasicDto';
+import { UtilityService } from 'src/app/services/utilityService';
 
 export function Home() {
   const dispatch = useDispatch();
+  const _utilityService = new UtilityService();
   const _root = useSelector((state: RootState) => state.root);
   const [showEditStudentModal, setShowEditStudentModal] = useState(false);
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
@@ -152,7 +154,9 @@ export function Home() {
                   <td>{student.id}</td>
                   <td>{student.firstName}</td>
                   <td>{student.lastName}</td>
-                  <td>{student.dateOfBirth.toString()}</td>
+                  <td>
+                    {_utilityService.convertToReadable(student.dateOfBirth)}
+                  </td>
                 </tr>
               ))
             ) : (
