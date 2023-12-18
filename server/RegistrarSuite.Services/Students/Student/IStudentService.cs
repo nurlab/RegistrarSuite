@@ -27,6 +27,17 @@ namespace RegistrarSuite.Services.Students
         Task<StudentBasicDto?> AddNewStudent(StudentBasicDto studentBasicDto);
 
         /// <summary>
+        /// Adds a new Student with Basic Details Only.
+        /// </summary>
+        /// <param name="studentBasicDto">The data transfer object (DTO) containing the basic details for the new student.</param>
+        /// <returns>
+        /// A <see cref="Task{StudentBasicDto}"/> representing the asynchronous operation.
+        /// The task result is a <see cref="StudentBasicDto"/> containing information about the newly added student.
+        /// If the addition fails, returns <c>null</c>.
+        /// </returns>
+        Task<StudentWithFamilyMembersDto?> AddStudentWithFamilyMembers(StudentWithFamilyMembersDto studentWithFamilyMembersDto);
+
+        /// <summary>
         /// Updates a Student's Basic Details.
         /// </summary>
         /// <param name="Id">The identifier of the student whose basic details are being updated.</param>

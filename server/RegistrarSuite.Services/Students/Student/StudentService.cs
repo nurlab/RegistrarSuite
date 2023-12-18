@@ -91,6 +91,40 @@ namespace RegistrarSuite.Services.Students
                 throw;
             }
         }
+        public async Task<StudentWithFamilyMembersDto> AddStudentWithFamilyMembers(StudentWithFamilyMembersDto studentWithFamilyMembersDto)
+        {
+            try
+            {
+                
+                var newStudent = _mapper.Map<Student>(studentWithFamilyMembersDto);
+                var newFamilyMembers = _mapper.Map<List<FamilyMember>>(studentWithFamilyMembersDto.FamilyMembers);
+
+                newStudent.SetCreateProperties(newStudent);
+                newFamilyMembers.ForEach(familyMember => newStudent.SetCreateProperties(familyMember));
+
+                newStudent.FamilyMembers = newFamilyMembers;
+
+                await _studentRepository.AddAsync(newStudent);
+
+                int save = await _unitOfWork.CommitAsync();
+                if (save == 0)
+                {
+                    _logger.Error("Failed to save the Student");
+                    return null; ;
+                }
+
+                var createdStudentWithFamilyMembersDto  = _mapper.Map<StudentWithFamilyMembersDto>(newStudent);
+                createdStudentWithFamilyMembersDto.FamilyMembers = _mapper.Map<List<FamilyMemberDto>>(newFamilyMembers);
+
+                return createdStudentWithFamilyMembersDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error in row '{ex}'");
+                throw;
+            }
+        }
+
 
         public async Task<StudentBasicDto?> UpdateStudent(int id , StudentBasicDto studentBasicDto)
         {

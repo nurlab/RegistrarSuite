@@ -13,6 +13,12 @@ namespace RegistrarSuite.Services
             CreateMap<Student, StudentDto>().ReverseMap();
             CreateMap<Student, StudentBasicDto>().ReverseMap();
             CreateMap<Student, StudentNationalityDto>().ReverseMap();
+            CreateMap<Student, StudentWithFamilyMembersDto>()
+                       .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                       .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                       .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+                       .ForMember(dest => dest.NationalityCode, opt => opt.MapFrom(src => src.NationalityCode))
+                       .ReverseMap();
             CreateMap<FamilyMember, FamilyMemberDto>().ReverseMap();
             CreateMap<FamilyMember, FamilyMemberBasicDto>().ReverseMap();
             CreateMap<FamilyMember, FamilyMemberBasicResponseDto>().ReverseMap();

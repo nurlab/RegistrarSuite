@@ -33,6 +33,15 @@ namespace RegistrarSuite.Controllers
             return result;
         }
 
+        // Add a new Student with Basic Details Only
+        // [POST] /api/AddStudentWithFamilyMembers
+        [HttpPost("AddStudentWithFamilyMembers")]
+        public async Task<StudentWithFamilyMembersDto> AddStudentWithFamilyMembers([FromBody] StudentWithFamilyMembersDto studentWithFamilyMembersDto)
+        {
+            StudentWithFamilyMembersDto? result = await _studentService.AddStudentWithFamilyMembers(studentWithFamilyMembersDto);
+            return result;
+        }
+
         // Updates a Student’s Basic Details only
         // [PUT] /api/Students/{id}
         [HttpPut("{id}")]

@@ -1,4 +1,5 @@
 ﻿using RegistrarSuite.Core.Interfaces;
+using RegistrarSuite.Data.BaseModeling;
 using System;
 
 
